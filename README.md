@@ -22,7 +22,7 @@
 - [x] Router
 - [x] Authentication : Apollo Reactive Variables
 - [x] Architecture
-- [ ] Styles System
+- [ ] Styles System : styled-components
 
 ### Router
 
@@ -52,4 +52,6 @@
 - Apollo client 를 이용해서 graphql 을 이용함과 동시에 local state 도 다룰 수 있다.
 - Apollo Reactive variables
 - https://www.apollographql.com/docs/react/local-state/reactive-variables
+- you can interact with variables anywhere in your application without using GraphQL syntax.
+- Most importantly, modifying a reactive variable triggers an update of every active query that depends on that variable.
 - apollo.ts 파일을 만들어 reative variable function 을 정의하고 useReactiveVar을 이용해 컴포넌트에서 import 한 후 return 값을 변수로 할당한다.
