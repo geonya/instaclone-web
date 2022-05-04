@@ -20,8 +20,8 @@
 ## Front Structure Setup
 
 - [x] Router
-- [ ] Authentication
-- [ ] Architecture
+- [x] Authentication : Apollo Reactive Variables
+- [x] Architecture
 - [ ] Styles System
 
 ### Router
@@ -42,4 +42,14 @@
 - Route path=“\*” , 해당 url에 맞는 route가 없는 것이므로 404 에러 페이지로 render
 - 다른 방법으로 Navigate react-router-dom 컴포넌트를 이용해 지정 url 로 redirect 가능
 
-### Authentication
+## Authentication
+
+### 8.5 Auth POC : proof of concept
+
+### 8.6 Reactive Variables
+
+- isLoggedIn variable을 어떻게 control 할 것인가.
+- Apollo client 를 이용해서 graphql 을 이용함과 동시에 local state 도 다룰 수 있다.
+- Apollo Reactive variables
+- https://www.apollographql.com/docs/react/local-state/reactive-variables
+- apollo.ts 파일을 만들어 reative variable function 을 정의하고 useReactiveVar을 이용해 컴포넌트에서 import 한 후 return 값을 변수로 할당한다.
