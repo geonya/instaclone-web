@@ -1,5 +1,5 @@
-const Signup = () => {
+const SignUp = () => {
 	return null;
 };
 
-export default Signup;
+export default SignUp;

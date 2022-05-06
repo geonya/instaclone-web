@@ -1,14 +1,21 @@
 # InstaClone Web Client
 
+## Front Structure Setup
+
 - [x] Router
 - [x] Authentication : Apollo Reactive Variables
 - [x] Architecture
 - [x] Styles setup
-- [ ] typescript setup
-  - [ ] styled-components
-  - [ ] react-hook-form
-  - [ ] GraphQL
+- [x] typescript setup
+  - [x] styled-components
+  - [x] react-hook-form
+  - [x] GraphQL
 - [ ] Login / Sign up
+  - [ ] Login UI
+  - [ ] Signup UI
+  - [ ] Forms
+  - [ ] Helmet Component
+  - [ ]
 
 ## PKG Setup
 
@@ -27,9 +34,7 @@
   - @types/react
   - @types/styled-components
 
-## Front Structure Setup
-
-### Router
+### 8.3 Router
 
 - 특정 URL로 가면 해당 Components 를 보여줌
 - Browser Router
@@ -47,8 +52,6 @@
 - Route path=“\*” , 해당 url에 맞는 route가 없는 것이므로 404 에러 페이지로 render
 - 다른 방법으로 Navigate react-router-dom 컴포넌트를 이용해 지정 url 로 redirect 가능
 
-## Authentication
-
 ### 8.5 Auth POC : proof of concept
 
 ### 8.6 Reactive Variables
@@ -61,12 +64,9 @@
 - Most importantly, modifying a reactive variable triggers an update of every active query that depends on that variable.
 - apollo.ts 파일을 만들어 reative variable function 을 정의하고 useReactiveVar을 이용해 컴포넌트에서 import 한 후 return 값을 변수로 할당한다.
 
-## Styles
-
-- `styled-components` / `styled-reset` / `GlobalStyles`
-
 ### 8.7 styled-components
 
+- `styled-components` / `styled-reset` / `GlobalStyles`
 - styled-components 는 React.js 를 사용할 때 CSS 작업을 할 수 있는 가장 좋은 방법이다
   https://styled-components.com/docs/basics#motivation
 
@@ -131,7 +131,7 @@ const Container = styled.div<IContainerProps>`
 return <Container floating={true} />;
 ```
 
-## typescript setup
+## Ch.9 typescript setup
 
 ### react-hook-form
 
@@ -162,3 +162,24 @@ const App = () => {
 - `npx graphql-codegen init`
 - 초기화로 생성한 codegen.yml 파일이 생성되면 `npm i` 로 추가 플러그인 설치
 - `npm run codegen`
+
+```yml
+overwrite: true
+schema: "http://localhost:4000/graphql"
+documents: "./src/**/*.{ts,tsx}"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
+```
+
+- `"typescript-operations"` plugin 덕분에 useQuery 나 useMutation 이 개별 type이 적용된 맞춤형 버전으로 사용할 수 있다. (ex useLoginMutation)
+
+## Ch.10 Login and Signup
+
+### Login UI Clone
