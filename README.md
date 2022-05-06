@@ -1,5 +1,15 @@
 # InstaClone Web Client
 
+- [x] Router
+- [x] Authentication : Apollo Reactive Variables
+- [x] Architecture
+- [x] Styles setup
+- [ ] typescript setup
+  - [ ] styled-components
+  - [ ] react-hook-form
+  - [ ] GraphQL
+- [ ] Login / Sign up
+
 ## PKG Setup
 
 - app init with cra typescript
@@ -18,11 +28,6 @@
   - @types/styled-components
 
 ## Front Structure Setup
-
-- [x] Router
-- [x] Authentication : Apollo Reactive Variables
-- [x] Architecture
-- [ ] Styles System : styled-components
 
 ### Router
 
@@ -55,3 +60,105 @@
 - you can interact with variables anywhere in your application without using GraphQL syntax.
 - Most importantly, modifying a reactive variable triggers an update of every active query that depends on that variable.
 - apollo.ts 파일을 만들어 reative variable function 을 정의하고 useReactiveVar을 이용해 컴포넌트에서 import 한 후 return 값을 변수로 할당한다.
+
+## Styles
+
+- `styled-components` / `styled-reset` / `GlobalStyles`
+
+### 8.7 styled-components
+
+- styled-components 는 React.js 를 사용할 때 CSS 작업을 할 수 있는 가장 좋은 방법이다
+  https://styled-components.com/docs/basics#motivation
+
+```js
+const Title = styled.h1`
+	color: ${(props) => (props.potato ? "red" : "blue")};
+	${(props) => (props.potato ? "font-size:10px" : "font-size:100px")}
+`;
+```
+
+- css와 prop을 쉽게 적용 가능한 component 를 만든다.
+
+### 8.8 Themes on Styled Components
+
+- ThemeProvider Wrapper는 하위 컴포넌트들이 theme 을 이용할 수 있도록 해준다.
+- Reactive Variables 을 이용하여 theme의 state 를 관리할 수 있다.
+- src 폴더 내에 styled.d.ts 파일을 만들어 theme 의 type을 선언(declare)하여 자동완성을 이용할 수 있다.
+
+```js
+import "styled-components";
+declare module "styled-components" {
+	export interface DefaultTheme {
+		fontColor: string;
+		bgColor: string;
+	}
+}
+```
+
+### 8.9 GlobalStyles on Styled Components
+
+- [x] Styles System : styled-components / GlobalStyles / styled-reset
+
+- GlobalStyles 를 만들어서 적용할 수 있다.
+
+```typescript
+export const GlobalStyles = createGlobalStyle`
+  ${reset};
+  body {
+    background-color: ${(props) => props.theme.bgColor}
+  }
+`;
+
+// App.tsx
+return (
+  <GlobalStyles />;
+)
+```
+
+- styled-reset module을 적용하여 기본 CSS 값들을 모두 초기화시킬 수 있다.
+- styled.d.ts 에서 styled-components theme 등을 type화할 수 있다.
+- style component 에 prop type을 지정할 수 있다.
+
+```tsx
+interface IContainerProps {
+	floating: boolean;
+}
+
+const Container = styled.div<IContainerProps>`
+  box-shadow = ${(props) => (props.floating ? "" : "")}
+`;
+
+return <Container floating={true} />;
+```
+
+## typescript setup
+
+### react-hook-form
+
+```tsx
+
+interface IForm {
+  name:string;
+  lastname?:string;
+}
+
+const App = () => {
+  const {register, handleSubmit, getValues, setValue} = useForm<IForm>();
+  const onValid =() => {
+    const {name, lastName} = getValues()
+  }
+  return (
+    <form onsubmit={handleSubmit(onValid)}>
+      <input ref={register({required:true})} name="name" type="text">
+      <input ref={register} name="lastName" type="text">
+    </form>
+  )
+}
+```
+
+### graphql
+
+- `npm i graphql` `npm i @graphql-codegen/cli -D`
+- `npx graphql-codegen init`
+- 초기화로 생성한 codegen.yml 파일이 생성되면 `npm i` 로 추가 플러그인 설치
+- `npm run codegen`
