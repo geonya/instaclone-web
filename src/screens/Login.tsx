@@ -13,6 +13,7 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/ButtomBox";
 import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
+import FormError from "../components/auth/FormError";
 
 const FaceBookLogin = styled.div`
 	margin-top: 30px;
@@ -28,12 +29,14 @@ interface IForm {
 	password: string;
 }
 const Login = () => {
-	const { register, handleSubmit, setValue, setError } = useForm<IForm>();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isValid },
+	} = useForm<IForm>({ mode: "onChange" });
+	// mode: onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
 	const onSubmitValid = (data: IForm) => {
-		console.log("DATA", data);
-	};
-	const onSubmitInValid = (error: any) => {
-		console.log("Error", error);
+		console.log("Valid DATA", data);
 	};
 	return (
 		<AuthLayout>
@@ -42,35 +45,42 @@ const Login = () => {
 				<div>
 					<FontAwesomeIcon icon={faInstagram} size="4x" />
 				</div>
-				<form onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
+				<form onSubmit={handleSubmit(onSubmitValid)}>
 					<AuthInput
 						{...register("username", {
-							required: "username is required!",
+							required: "username을 입력해주세요.",
 							minLength: {
-								message: "2~10자 이내에 영문만 사용 가능합니다. ",
 								value: 2,
+								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다. ",
 							},
 							maxLength: {
-								message: "2~10자 이내에 영문만 사용 가능합니다. ",
 								value: 10,
+								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다. ",
 							},
 							pattern: {
-								message: "2~10자 이내에 영문만 사용 가능합니다.",
 								value: /^[a-z0-9]{2,10}$/g,
+								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다.",
 							},
 						})}
 						type="text"
 						placeholder="Username"
+						hasError={Boolean(errors?.username?.message)}
 					/>
+					<FormError message={errors?.username?.message} />
 					<AuthInput
 						{...register("password", {
-							required: "password is required!",
-							minLength: 8,
+							required: "비밀번호를 입력해주세요.",
+							minLength: {
+								value: 4,
+								message: "비밀번호는 최소 4자 이상이여야 합니다.",
+							},
 						})}
 						type="password"
 						placeholder="Password"
+						hasError={Boolean(errors?.password?.message)}
 					/>
-					<SubmitButton type="submit" value="Log In" disabled={false} />
+					<FormError message={errors?.password?.message} />
+					<SubmitButton type="submit" value="Log In" disabled={!isValid} />
 				</form>
 				<Seperator />
 				<FaceBookLogin>
