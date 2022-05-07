@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Input = styled.input`
+const AuthInput = styled.input`
 	width: 100%;
 	border-radius: 3px;
 	padding: 7px;
@@ -11,13 +11,5 @@ const Input = styled.input`
 		font-size: 12px;
 	}
 `;
-
-interface IAuthInputProps {
-	[key: string]: string;
-}
-
-const AuthInput = (props: IAuthInputProps) => {
-	return <Input {...props} />;
-};
 
 export default AuthInput;

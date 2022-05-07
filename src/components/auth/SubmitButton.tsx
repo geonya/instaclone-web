@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Button = styled.input`
+const SubmitButton = styled.input`
 	width: 100%;
 	border: none;
 	border-radius: 3px;
@@ -11,13 +11,5 @@ const Button = styled.input`
 	padding: 6.5px 7px;
 	font-weight: 600;
 `;
-
-interface ISubmitButtonProps {
-	[key: string]: string;
-}
-
-const SubmitButton = (props: ISubmitButtonProps) => {
-	return <Button {...props} />;
-};
 
 export default SubmitButton;

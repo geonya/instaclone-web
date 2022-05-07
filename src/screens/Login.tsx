@@ -13,6 +13,7 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/ButtomBox";
 
 const FaceBookLogin = styled.div`
+	margin-top: 30px;
 	color: #385185;
 	span {
 		margin-left: 10px;
