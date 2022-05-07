@@ -12,8 +12,11 @@ import AuthInput from "../components/auth/AuthInput";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/ButtomBox";
 import PageTitle from "../components/PageTitle";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
+import { gql } from "@apollo/client";
+import { useLoginMutation } from "../generated/graphql";
+import { logUserIn } from "../apollo";
 
 const FaceBookLogin = styled.div`
 	margin-top: 30px;
@@ -24,19 +27,53 @@ const FaceBookLogin = styled.div`
 	}
 `;
 
-interface IForm {
+gql`
+	mutation login($username: String!, $password: String!) {
+		login(username: $username, password: $password) {
+			ok
+			token
+			error
+		}
+	}
+`;
+
+interface IFormValues {
 	username: string;
 	password: string;
+	result: string;
 }
 const Login = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isValid },
-	} = useForm<IForm>({ mode: "onChange" });
-	// mode: onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
-	const onSubmitValid = (data: IForm) => {
-		console.log("Valid DATA", data);
+		getValues,
+		setError,
+		clearErrors,
+		formState: { errors, isValid, isDirty },
+	} = useForm<IFormValues>({ mode: "onChange" });
+
+	const [login, { loading }] = useLoginMutation({
+		onCompleted: (data) => {
+			if (!data || !data.login) return;
+			const {
+				login: { ok, error, token },
+			} = data;
+			if (!ok) {
+				setError("result", {
+					message: error!,
+				});
+			}
+			if (token) {
+				logUserIn(token);
+			}
+		},
+	});
+	const onSubmitValid: SubmitHandler<IFormValues> = (data) => {
+		if (loading) return;
+		const { username, password } = getValues();
+		login({
+			variables: { username, password },
+		});
 	};
 	return (
 		<AuthLayout>
@@ -61,6 +98,9 @@ const Login = () => {
 								value: /^[a-z0-9]{2,10}$/g,
 								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다.",
 							},
+							onChange: () => {
+								clearErrors("result");
+							},
 						})}
 						type="text"
 						placeholder="Username"
@@ -74,13 +114,21 @@ const Login = () => {
 								value: 4,
 								message: "비밀번호는 최소 4자 이상이여야 합니다.",
 							},
+							onChange: () => {
+								clearErrors("result");
+							},
 						})}
 						type="password"
 						placeholder="Password"
 						hasError={Boolean(errors?.password?.message)}
 					/>
 					<FormError message={errors?.password?.message} />
-					<SubmitButton type="submit" value="Log In" disabled={!isValid} />
+					<SubmitButton
+						type="submit"
+						value={loading ? "Loading..." : "Log In"}
+						disabled={!isValid || loading || !isDirty}
+					/>
+					<FormError message={errors?.result?.message} />
 				</form>
 				<Seperator />
 				<FaceBookLogin>

@@ -10,7 +10,7 @@ const SubmitButton = styled.input`
 	text-align: center;
 	padding: 6.5px 7px;
 	font-weight: 600;
-	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+	opacity: ${(props) => (props.disabled ? 0.3 : 1)};
 `;
 
 export default SubmitButton;
