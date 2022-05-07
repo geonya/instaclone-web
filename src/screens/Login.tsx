@@ -11,6 +11,8 @@ import Seperator from "../components/auth/Seperator";
 import AuthInput from "../components/auth/AuthInput";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/ButtomBox";
+import PageTitle from "../components/PageTitle";
+import { useForm } from "react-hook-form";
 
 const FaceBookLogin = styled.div`
 	margin-top: 30px;
@@ -20,17 +22,55 @@ const FaceBookLogin = styled.div`
 		font-weight: 500;
 	}
 `;
+
+interface IForm {
+	username: string;
+	password: string;
+}
 const Login = () => {
+	const { register, handleSubmit, setValue, setError } = useForm<IForm>();
+	const onSubmitValid = (data: IForm) => {
+		console.log("DATA", data);
+	};
+	const onSubmitInValid = (error: any) => {
+		console.log("Error", error);
+	};
 	return (
 		<AuthLayout>
+			<PageTitle title="Login" />
 			<FormBox>
 				<div>
 					<FontAwesomeIcon icon={faInstagram} size="4x" />
 				</div>
-				<form>
-					<AuthInput type="text" placeholder="Username" />
-					<AuthInput type="password" placeholder="Password" />
-					<SubmitButton type="submit" value="Log In" />
+				<form onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
+					<AuthInput
+						{...register("username", {
+							required: "username is required!",
+							minLength: {
+								message: "2~10자 이내에 영문만 사용 가능합니다. ",
+								value: 2,
+							},
+							maxLength: {
+								message: "2~10자 이내에 영문만 사용 가능합니다. ",
+								value: 10,
+							},
+							pattern: {
+								message: "2~10자 이내에 영문만 사용 가능합니다.",
+								value: /^[a-z0-9]{2,10}$/g,
+							},
+						})}
+						type="text"
+						placeholder="Username"
+					/>
+					<AuthInput
+						{...register("password", {
+							required: "password is required!",
+							minLength: 8,
+						})}
+						type="password"
+						placeholder="Password"
+					/>
+					<SubmitButton type="submit" value="Log In" disabled={false} />
 				</form>
 				<Seperator />
 				<FaceBookLogin>
@@ -41,7 +81,7 @@ const Login = () => {
 			<BottomBox
 				cta="Don't Have an accunt?"
 				link={routes.signUp}
-				linkText="Sgin Up"
+				linkText="Sign Up"
 			/>
 		</AuthLayout>
 	);

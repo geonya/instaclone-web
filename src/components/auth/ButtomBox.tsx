@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { BaseBox } from "../../shared";
+import { BaseBox } from "../../sharedStyles";
 
 const Container = styled(BaseBox)`
 	padding: 20px 10px;
