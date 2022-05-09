@@ -17,6 +17,9 @@ import FormError from "../components/auth/FormError";
 import { gql } from "@apollo/client";
 import { useLoginMutation } from "../generated/graphql";
 import { logUserIn } from "../apollo";
+import { useLocation } from "react-router-dom";
+import { ISignUpState } from "./SignUp";
+import Notification from "../components/Notification";
 
 const FaceBookLogin = styled.div`
 	margin-top: 30px;
@@ -42,19 +45,31 @@ interface IFormValues {
 	password: string;
 	result: string;
 }
+
+interface IState {
+	signUpState: ISignUpState;
+}
+
 const Login = () => {
+	const location = useLocation();
+	const state = location.state as IState;
 	const {
 		register,
 		handleSubmit,
-		getValues,
 		setError,
 		clearErrors,
-		formState: { errors, isValid, isDirty },
-	} = useForm<IFormValues>({ mode: "onChange" });
+		formState: { errors, isValid },
+	} = useForm<IFormValues>({
+		mode: "onChange",
+		defaultValues: {
+			username: state?.signUpState?.username || "",
+			password: state?.signUpState?.password || "",
+		},
+	});
 
 	const [login, { loading }] = useLoginMutation({
 		onCompleted: (data) => {
-			if (!data || !data.login) return;
+			if (!data?.login) return;
 			const {
 				login: { ok, error, token },
 			} = data;
@@ -70,11 +85,12 @@ const Login = () => {
 	});
 	const onSubmitValid: SubmitHandler<IFormValues> = (data) => {
 		if (loading) return;
-		const { username, password } = getValues();
+		const { username, password } = data;
 		login({
 			variables: { username, password },
 		});
 	};
+
 	return (
 		<AuthLayout>
 			<PageTitle title="Login" />
@@ -82,6 +98,9 @@ const Login = () => {
 				<div>
 					<FontAwesomeIcon icon={faInstagram} size="4x" />
 				</div>
+				{state?.signUpState && (
+					<Notification message={state?.signUpState?.message} />
+				)}
 				<form onSubmit={handleSubmit(onSubmitValid)}>
 					<AuthInput
 						{...register("username", {
@@ -126,7 +145,7 @@ const Login = () => {
 					<SubmitButton
 						type="submit"
 						value={loading ? "Loading..." : "Log In"}
-						disabled={!isValid || loading || !isDirty}
+						disabled={!isValid || loading}
 					/>
 					<FormError message={errors?.result?.message} />
 				</form>

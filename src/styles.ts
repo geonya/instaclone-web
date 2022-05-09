@@ -6,12 +6,14 @@ export const lightTheme: DefaultTheme = {
 	bgColor: "#FAFAFA",
 	borderColor: "rgb(219, 219, 219)",
 	accentBlue: "#0095f6",
+	accentGreen: "#2ecc71",
 };
 export const darkTheme: DefaultTheme = {
 	fontColor: "#FAFAFA",
 	bgColor: "#2c2c2c",
 	borderColor: "rgb(219, 219, 219)",
 	accentBlue: "#0095f6",
+	accentGreen: "#2ecc71",
 };
 
 export const GlobalStyles = createGlobalStyle`
