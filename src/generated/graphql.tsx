@@ -315,7 +315,12 @@ export type User = {
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', username: string, avatar?: string | null } | null };
+export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', id: number, username: string, avatar?: string | null } | null };
+
+export type SeeFeedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', id: number, file: string, caption?: string | null, likes: number, comments: number, createdAt: string, isMine: boolean, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -340,6 +345,7 @@ export type CreateAccountMutation = { __typename?: 'Mutation', createAccount?: {
 export const SeeMeDocument = gql`
     query seeMe {
   seeMe {
+    id
     username
     avatar
   }
@@ -372,6 +378,50 @@ export function useSeeMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeM
 export type SeeMeQueryHookResult = ReturnType<typeof useSeeMeQuery>;
 export type SeeMeLazyQueryHookResult = ReturnType<typeof useSeeMeLazyQuery>;
 export type SeeMeQueryResult = Apollo.QueryResult<SeeMeQuery, SeeMeQueryVariables>;
+export const SeeFeedDocument = gql`
+    query SeeFeed {
+  seeFeed {
+    id
+    user {
+      username
+      avatar
+    }
+    file
+    caption
+    likes
+    comments
+    createdAt
+    isMine
+  }
+}
+    `;
+
+/**
+ * __useSeeFeedQuery__
+ *
+ * To run a query within a React component, call `useSeeFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeFeedQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSeeFeedQuery(baseOptions?: Apollo.QueryHookOptions<SeeFeedQuery, SeeFeedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeFeedQuery, SeeFeedQueryVariables>(SeeFeedDocument, options);
+      }
+export function useSeeFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeFeedQuery, SeeFeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeFeedQuery, SeeFeedQueryVariables>(SeeFeedDocument, options);
+        }
+export type SeeFeedQueryHookResult = ReturnType<typeof useSeeFeedQuery>;
+export type SeeFeedLazyQueryHookResult = ReturnType<typeof useSeeFeedLazyQuery>;
+export type SeeFeedQueryResult = Apollo.QueryResult<SeeFeedQuery, SeeFeedQueryVariables>;
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

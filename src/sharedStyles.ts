@@ -10,3 +10,7 @@ export const FatLink = styled.h3`
 	color: rgb(142, 142, 142);
 	font-weight: 600;
 `;
+
+export const FatText = styled.span`
+	font-weight: 600;
+`;

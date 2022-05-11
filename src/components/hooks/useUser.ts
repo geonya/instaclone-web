@@ -8,6 +8,7 @@ import routes from "../../routes";
 gql`
 	query seeMe {
 		seeMe {
+			id
 			username
 			avatar
 		}
@@ -23,7 +24,9 @@ const useUser = () => {
 			logUserOut(navigate, routes.home);
 		}
 	}, [data, navigate]);
-	return;
+	return {
+		data,
+	};
 };
 
 export default useUser;
