@@ -2,6 +2,7 @@ import { createGlobalStyle, DefaultTheme } from "styled-components";
 import reset from "styled-reset";
 
 export const lightTheme: DefaultTheme = {
+	maxWidth: "930px",
 	fontColor: "#2c2c2c",
 	bgColor: "#FAFAFA",
 	borderColor: "rgb(219, 219, 219)",
@@ -9,6 +10,7 @@ export const lightTheme: DefaultTheme = {
 	accentGreen: "#2ecc71",
 };
 export const darkTheme: DefaultTheme = {
+	maxWidth: "930px",
 	fontColor: "#FAFAFA",
 	bgColor: "#2c2c2c",
 	borderColor: "rgb(219, 219, 219)",
