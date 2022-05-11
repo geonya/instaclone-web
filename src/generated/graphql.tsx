@@ -208,6 +208,7 @@ export type Query = {
   seeFollowers: MutationResponse;
   seeFollowing: MutationResponse;
   seeHashtag?: Maybe<Hashtag>;
+  seeMe?: Maybe<User>;
   seePhoto?: Maybe<Photo>;
   seePhotoComments?: Maybe<Array<Maybe<Comment>>>;
   seePhotoLikes?: Maybe<Array<Maybe<User>>>;
@@ -311,6 +312,11 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', username: string, avatar?: string | null } | null };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -331,6 +337,41 @@ export type CreateAccountMutationVariables = Exact<{
 export type CreateAccountMutation = { __typename?: 'Mutation', createAccount?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
 
 
+export const SeeMeDocument = gql`
+    query seeMe {
+  seeMe {
+    username
+    avatar
+  }
+}
+    `;
+
+/**
+ * __useSeeMeQuery__
+ *
+ * To run a query within a React component, call `useSeeMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSeeMeQuery(baseOptions?: Apollo.QueryHookOptions<SeeMeQuery, SeeMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeMeQuery, SeeMeQueryVariables>(SeeMeDocument, options);
+      }
+export function useSeeMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeMeQuery, SeeMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeMeQuery, SeeMeQueryVariables>(SeeMeDocument, options);
+        }
+export type SeeMeQueryHookResult = ReturnType<typeof useSeeMeQuery>;
+export type SeeMeLazyQueryHookResult = ReturnType<typeof useSeeMeLazyQuery>;
+export type SeeMeQueryResult = Apollo.QueryResult<SeeMeQuery, SeeMeQueryVariables>;
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
