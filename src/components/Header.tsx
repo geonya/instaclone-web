@@ -1,6 +1,7 @@
 import { useReactiveVar } from "@apollo/client";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faCompass, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faCompass } from "@fortawesome/free-regular-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -65,7 +66,7 @@ const Header = () => {
 								<FontAwesomeIcon icon={faCompass} size="2x" />
 							</Icon>
 							<Icon>
-								<Avatar url={data?.seeMe?.avatar} />
+								<Avatar url={data?.seeMe?.avatar} lg={false} />
 							</Icon>
 						</IconsContainer>
 					) : (
