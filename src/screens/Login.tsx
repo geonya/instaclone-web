@@ -14,7 +14,6 @@ import BottomBox from "../components/auth/ButtomBox";
 import PageTitle from "../components/PageTitle";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
-import { gql } from "@apollo/client";
 import { useLoginMutation } from "../generated/graphql";
 import { logUserIn } from "../apollo";
 import { useLocation } from "react-router-dom";
@@ -29,17 +28,6 @@ const FaceBookLogin = styled.div`
 		font-weight: 500;
 	}
 `;
-
-gql`
-	mutation login($username: String!, $password: String!) {
-		login(username: $username, password: $password) {
-			ok
-			token
-			error
-		}
-	}
-`;
-
 interface IFormValues {
 	username: string;
 	password: string;

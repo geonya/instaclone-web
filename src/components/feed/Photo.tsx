@@ -9,17 +9,10 @@ import {
 	faPaperPlane,
 } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
-import { gql } from "@apollo/client";
-import { useToggleLikeMutation } from "../../generated/graphql";
-
-gql`
-	mutation ToggleLike($id: Int!) {
-		toggleLike(id: $id) {
-			ok
-			error
-		}
-	}
-`;
+import {
+	SeeFeedDocument,
+	useToggleLikeMutation,
+} from "../../generated/graphql";
 
 const PhotoContainer = styled.div`
 	max-width: 615px;
@@ -83,6 +76,7 @@ const PhotoBox = ({ id, user, file, isLiked, likes }: IPhotoBoxProps) => {
 		variables: {
 			id,
 		},
+		refetchQueries: [{ query: SeeFeedDocument }], // 전체 query를 refetching 하기 때문에 작은 query 에 알맞음
 	});
 	return (
 		<PhotoContainer>

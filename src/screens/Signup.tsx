@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -28,27 +27,6 @@ const Subtitle = styled(FatLink)`
 	margin-top: 10px;
 	font-size: 16px;
 	text-align: center;
-`;
-
-gql`
-	mutation createAccount(
-		$firstName: String!
-		$username: String!
-		$email: String!
-		$password: String!
-		$lastName: String
-	) {
-		createAccount(
-			firstName: $firstName
-			username: $username
-			email: $email
-			password: $password
-			lastName: $lastName
-		) {
-			ok
-			error
-		}
-	}
 `;
 
 interface IFormValues {
