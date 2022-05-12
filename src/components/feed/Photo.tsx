@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { FatText } from "../../sharedStyles";
 import Avatar from "../Avatar";
 import {
@@ -13,6 +13,7 @@ import {
 	SeeFeedDocument,
 	useToggleLikeMutation,
 } from "../../generated/graphql";
+import { MutationUpdaterFunction } from "@apollo/client";
 
 const PhotoContainer = styled.div`
 	max-width: 615px;
@@ -76,7 +77,19 @@ const PhotoBox = ({ id, user, file, isLiked, likes }: IPhotoBoxProps) => {
 		variables: {
 			id,
 		},
-		refetchQueries: [{ query: SeeFeedDocument }], // 전체 query를 refetching 하기 때문에 작은 query 에 알맞음
+		update(cache, { data }) {
+			cache.modify({
+				id: `Photo:${id}`,
+				fields: {
+					isLiked(prev) {
+						return !prev;
+					},
+					likes(prev) {
+						return isLiked ? prev - 1 : prev + 1;
+					},
+				},
+			});
+		},
 	});
 	return (
 		<PhotoContainer>
