@@ -42,7 +42,17 @@ gql`
 			file
 			caption
 			likes
-			comments
+			commentsCount
+			comments {
+				id
+				user {
+					username
+					avatar
+				}
+				payload
+				isMine
+				createdAt
+			}
 			createdAt
 			isMine
 			isLiked

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { FatText } from "../../sharedStyles";
 import Avatar from "../Avatar";
 import {
@@ -9,11 +9,8 @@ import {
 	faPaperPlane,
 } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
-import {
-	SeeFeedDocument,
-	useToggleLikeMutation,
-} from "../../generated/graphql";
-import { MutationUpdaterFunction } from "@apollo/client";
+import { useToggleLikeMutation } from "../../generated/graphql";
+import Comments, { IComments } from "./Comments";
 
 const PhotoContainer = styled.div`
 	max-width: 615px;
@@ -63,21 +60,34 @@ const Likes = styled(FatText)`
 
 interface IPhotoBoxProps {
 	id: number;
-	user?: {
-		username?: string;
+	user: {
+		username: string;
 		avatar?: string | null;
 	};
-	file?: string;
-	isLiked?: boolean;
-	likes?: number;
+	file: string;
+	isLiked: boolean;
+	likes: number;
+	caption?: string | null;
+	commentsCount: number;
+	comments?: IComments | null;
+	createdAt: string;
 }
 
-const PhotoBox = ({ id, user, file, isLiked, likes }: IPhotoBoxProps) => {
-	const [toggleLikeMutation, { loading }] = useToggleLikeMutation({
+const PhotoBox = ({
+	id,
+	user,
+	file,
+	isLiked,
+	likes,
+	caption,
+	commentsCount,
+	comments,
+}: IPhotoBoxProps) => {
+	const [toggleLikeMutation] = useToggleLikeMutation({
 		variables: {
 			id,
 		},
-		update(cache, { data }) {
+		update(cache) {
 			cache.modify({
 				id: `Photo:${id}`,
 				fields: {
@@ -120,6 +130,12 @@ const PhotoBox = ({ id, user, file, isLiked, likes }: IPhotoBoxProps) => {
 					</div>
 				</PhotoActions>
 				<Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
+				<Comments
+					author={user?.username}
+					caption={caption}
+					commentsCount={commentsCount}
+					comments={comments}
+				/>
 			</PhotoData>
 		</PhotoContainer>
 	);
