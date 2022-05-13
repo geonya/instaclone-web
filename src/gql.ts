@@ -123,4 +123,16 @@ gql`
 			error
 		}
 	}
+	mutation FollowUser($username: String!) {
+		followUser(username: $username) {
+			ok
+			error
+		}
+	}
+	mutation UnfollowUser($username: String!) {
+		unfollowUser(username: $username) {
+			ok
+			error
+		}
+	}
 `;

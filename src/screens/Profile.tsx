@@ -9,17 +9,15 @@ import { FatText } from "../sharedStyles";
 const Header = styled.div`
 	display: flex;
 `;
-
 const AvatarContainer = styled.div`
 	margin: 0 150px 0 50px;
 `;
-
 const Column = styled.div``;
 const Row = styled.div`
+	display: flex;
 	margin-bottom: 20px;
 	font-size: 16px;
 `;
-
 const List = styled.ul`
 	display: flex;
 `;
@@ -36,7 +34,6 @@ const Username = styled.h3`
 const Name = styled(FatText)`
 	font-size: 20px;
 `;
-
 const Grid = styled.div`
 	display: grid;
 	grid-auto-rows: 290px;
@@ -44,13 +41,11 @@ const Grid = styled.div`
 	gap: 30px;
 	margin-top: 50px;
 `;
-
 const Photo = styled.div<{ bg: string | undefined }>`
 	background-image: url(${(props) => props.bg});
 	background-size: cover;
 	position: relative;
 `;
-
 const Icons = styled.div`
 	position: absolute;
 	display: flex;
@@ -65,7 +60,6 @@ const Icons = styled.div`
 		opacity: 1;
 	}
 `;
-
 const Icon = styled.span`
 	font-size: 18px;
 	display: flex;
@@ -77,6 +71,11 @@ const Icon = styled.span`
 	}
 `;
 
+interface IGetUserButtonProps {
+	isMe: boolean;
+	isFollowing: boolean;
+}
+
 const Profile = () => {
 	const { username } = useParams();
 	const { data } = useSeeProfileQuery({
@@ -84,6 +83,16 @@ const Profile = () => {
 			username: username!,
 		},
 	});
+	const getUserButton = ({ isMe, isFollowing }: IGetUserButtonProps) => {
+		if (isMe) {
+			return <button>Edit Profile</button>;
+		}
+		if (isFollowing) {
+			return <button>Unfollow</button>;
+		} else {
+			return <button>Follow</button>;
+		}
+	};
 	return (
 		<div>
 			<Header>
@@ -93,6 +102,7 @@ const Profile = () => {
 				<Column>
 					<Row>
 						<Username>{data?.seeProfile?.username}</Username>
+						{data?.seeProfile ? getUserButton(data?.seeProfile) : null}
 					</Row>
 					<Row>
 						<List>
@@ -122,9 +132,11 @@ const Profile = () => {
 						<Icons>
 							<Icon>
 								<FontAwesomeIcon icon={faHeart} />
+								{photo?.likes}
 							</Icon>
 							<Icon>
 								<FontAwesomeIcon icon={faComment} />
+								{photo?.commentsCount}
 							</Icon>
 						</Icons>
 					</Photo>

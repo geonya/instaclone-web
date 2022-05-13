@@ -69,6 +69,16 @@ const Comment = ({ id, author, payload, isMine, photoId }: ICommentProps) => {
 	const onDeleteClick = () => {
 		deleteCommentMutation();
 	};
+	const getTagLink = (word: string) => {
+		if (/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w-]+/g.test(word)) {
+			return <Link to={`/hastags/${word.replace("#", "")}`}>{word}</Link>;
+		}
+		if (/@[\w-]+/.test(word)) {
+			return <Link to={`/users/${word.replace("@", "")}`}>{word}</Link>;
+		} else {
+			return word;
+		}
+	};
 	return (
 		<Container>
 			<Link to={`/users/${author}`}>
@@ -77,13 +87,7 @@ const Comment = ({ id, author, payload, isMine, photoId }: ICommentProps) => {
 			<Payload>
 				{payload?.split(" ").map((word, i, arr) => (
 					<Fragment key={i}>
-						{/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w-]+/g.test(word) ? (
-							<Link to={`/hastags/${word.replace("#", "")}`}>{word}</Link>
-						) : /@[\w-]+/.test(word) ? (
-							<Link to={`/users/${word.replace("@", "")}`}>{word}</Link>
-						) : (
-							word
-						)}
+						{getTagLink(word)}
 						{arr.length - 1 !== i && " "}
 					</Fragment>
 				))}
