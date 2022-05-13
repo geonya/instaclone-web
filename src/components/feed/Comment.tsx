@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { FatText } from "../../sharedStyles";
-import sanitizeHtml from "sanitize-html";
+import { Link } from "react-router-dom";
+import { Fragment } from "react";
 
 const Container = styled.div``;
 const Payload = styled.span`
 	margin-left: 10px;
-	mark {
+	a {
 		background-color: inherit;
 		color: ${(props) => props.theme.accentBlue};
 		cursor: pointer;
@@ -35,17 +36,20 @@ const Comment = ({ author, payload }: ICommentProps) => {
 	return (
 		<Container>
 			<FatText>{author}</FatText>
-			<Payload
-				dangerouslySetInnerHTML={{
-					__html: sanitizeHtml(
-						payload?.replace(/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w-]+/g, "<mark>$&</mark>") ||
-							"",
-						{
-							allowedTags: ["mark"],
-						}
-					),
-				}}
-			/>
+			<Payload>
+				{payload?.split(" ").map((word, i, arr) => (
+					<Fragment key={i}>
+						{/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w-]+/g.test(word) ? (
+							<Link to={`/hastags/${word.replace("#", "")}`}>{word}</Link>
+						) : /@[\w-]+/.test(word) ? (
+							<Link to={`/users/${word}`}>{word}</Link>
+						) : (
+							word
+						)}
+						{arr.length - 1 !== i && " "}
+					</Fragment>
+				))}
+			</Payload>
 		</Container>
 	);
 };
