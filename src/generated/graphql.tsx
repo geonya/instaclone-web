@@ -183,6 +183,7 @@ export type MutationUploadPhotoArgs = {
 export type MutationResponse = {
   __typename?: 'MutationResponse';
   error?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['Int']>;
   ok: Scalars['Boolean'];
 };
 
@@ -356,7 +357,7 @@ export type CreateCommentMutationVariables = Exact<{
 }>;
 
 
-export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null, id?: number | null } | null };
 
 
 export const SeeMeDocument = gql`
@@ -569,6 +570,7 @@ export const CreateCommentDocument = gql`
   createComment(photoId: $photoId, payload: $payload) {
     ok
     error
+    id
   }
 }
     `;

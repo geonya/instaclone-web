@@ -69,6 +69,7 @@ gql`
 		createComment(photoId: $photoId, payload: $payload) {
 			ok
 			error
+			id
 		}
 	}
 `;

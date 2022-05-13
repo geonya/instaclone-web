@@ -87,16 +87,12 @@ const PhotoBox = ({
 		variables: {
 			id,
 		},
-		update(cache) {
+		update: (cache) => {
 			cache.modify({
 				id: `Photo:${id}`,
 				fields: {
-					isLiked(prev) {
-						return !prev;
-					},
-					likes(prev) {
-						return isLiked ? prev - 1 : prev + 1;
-					},
+					isLiked: (prev) => !prev,
+					likes: (prev) => (isLiked ? prev - 1 : prev + 1),
 				},
 			});
 		},

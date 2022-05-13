@@ -42,7 +42,7 @@ const Comment = ({ author, payload }: ICommentProps) => {
 						{/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w-]+/g.test(word) ? (
 							<Link to={`/hastags/${word.replace("#", "")}`}>{word}</Link>
 						) : /@[\w-]+/.test(word) ? (
-							<Link to={`/users/${word}`}>{word}</Link>
+							<Link to={`/users/${word.replace("@", "")}`}>{word}</Link>
 						) : (
 							word
 						)}

@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useCreateCommentMutation } from "../../generated/graphql";
+import useUser from "../hooks/useUser";
 import Comment, { IComment } from "./Comment";
 
 const Container = styled.div`
@@ -36,8 +37,40 @@ const Comments = ({
 	commentsCount,
 	comments,
 }: ICommentsProps) => {
-	const [createCommentMutation, { loading }] = useCreateCommentMutation();
-	const { register, handleSubmit, setValue } = useForm<ICommentFormValues>();
+	const { data: userData } = useUser();
+	const { register, handleSubmit, setValue, getValues } =
+		useForm<ICommentFormValues>();
+	const [createCommentMutation, { loading }] = useCreateCommentMutation({
+		update: (cache, result) => {
+			if (!result?.data?.createComment) return;
+			const { payload } = getValues();
+			setValue("payload", "");
+			const {
+				data: {
+					createComment: { ok, id },
+				},
+			} = result;
+			if (ok && userData?.seeMe) {
+				const newComment = {
+					__typename: "Comment",
+					id,
+					isMine: true,
+					payload,
+					user: {
+						...userData.seeMe,
+					},
+					createAt: Date.now() + "",
+				};
+				cache.modify({
+					id: `Photo:${photoId}`,
+					fields: {
+						comments: (prev) => [...prev, newComment],
+						commentsCount: (prev) => prev + 1,
+					},
+				});
+			}
+		},
+	});
 	const onValid: SubmitHandler<ICommentFormValues> = (data) => {
 		const { payload } = data;
 		if (loading) return;
@@ -47,7 +80,6 @@ const Comments = ({
 				payload,
 			},
 		});
-		setValue("payload", "");
 	};
 	return (
 		<Container>
@@ -57,9 +89,9 @@ const Comments = ({
 			</CommentsCount>
 			{comments?.map((comment) => (
 				<Comment
+					key={comment?.id}
 					author={comment?.user.username}
 					payload={comment?.payload}
-					key={comment?.id}
 				/>
 			))}
 			<div>
