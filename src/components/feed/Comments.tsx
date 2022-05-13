@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useCreateCommentMutation } from "../../generated/graphql";
@@ -59,12 +60,29 @@ const Comments = ({
 					user: {
 						...userData.seeMe,
 					},
-					createAt: Date.now() + "",
+					createdAt: Date.now() + "",
 				};
+				// create comment cache (cache에 comment가 없으면 지울 수 없음)
+				// graphql 로 작업할 때는 cache가 database라고 생각해야함
+				const newCacheComment = cache.writeFragment({
+					data: newComment,
+					fragment: gql`
+						fragment BSName on Comment {
+							id
+							createdAt
+							isMine
+							payload
+							user {
+								username
+								avatar
+							}
+						}
+					`,
+				});
 				cache.modify({
 					id: `Photo:${photoId}`,
 					fields: {
-						comments: (prev) => [...prev, newComment],
+						comments: (prev) => [...prev, newCacheComment],
 						commentsCount: (prev) => prev + 1,
 					},
 				});
