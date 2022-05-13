@@ -65,4 +65,10 @@ gql`
 			error
 		}
 	}
+	mutation CreateComment($photoId: Int!, $payload: String!) {
+		createComment(photoId: $photoId, payload: $payload) {
+			ok
+			error
+		}
+	}
 `;

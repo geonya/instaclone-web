@@ -131,6 +131,7 @@ const PhotoBox = ({
 				</PhotoActions>
 				<Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
 				<Comments
+					photoId={id}
 					author={user?.username}
 					caption={caption}
 					commentsCount={commentsCount}

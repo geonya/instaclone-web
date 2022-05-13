@@ -1,4 +1,6 @@
+import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
+import { useCreateCommentMutation } from "../../generated/graphql";
 import Comment, { IComment } from "./Comment";
 
 const Container = styled.div`
@@ -16,18 +18,37 @@ const CommentsCount = styled.span`
 export interface IComments extends Array<IComment | null> {}
 
 interface ICommentsProps {
+	photoId: number;
 	caption?: string | null;
 	author: string;
 	commentsCount: number;
 	comments?: IComments | null;
 }
 
+interface ICommentFormValues {
+	payload: string;
+}
+
 const Comments = ({
+	photoId,
 	caption,
 	author,
 	commentsCount,
 	comments,
 }: ICommentsProps) => {
+	const [createCommentMutation, { loading }] = useCreateCommentMutation();
+	const { register, handleSubmit, setValue } = useForm<ICommentFormValues>();
+	const onValid: SubmitHandler<ICommentFormValues> = (data) => {
+		const { payload } = data;
+		if (loading) return;
+		createCommentMutation({
+			variables: {
+				photoId,
+				payload,
+			},
+		});
+		setValue("payload", "");
+	};
 	return (
 		<Container>
 			<Comment author={author} payload={caption} />
@@ -41,6 +62,15 @@ const Comments = ({
 					key={comment?.id}
 				/>
 			))}
+			<div>
+				<form onSubmit={handleSubmit(onValid)}>
+					<input
+						{...register("payload", { required: true })}
+						type="text"
+						placeholder="Write Comment..."
+					/>
+				</form>
+			</div>
 		</Container>
 	);
 };

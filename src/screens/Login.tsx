@@ -28,7 +28,7 @@ const FaceBookLogin = styled.div`
 		font-weight: 500;
 	}
 `;
-interface IFormValues {
+interface ILoginFormValues {
 	username: string;
 	password: string;
 	result: string;
@@ -47,7 +47,7 @@ const Login = () => {
 		setError,
 		clearErrors,
 		formState: { errors, isValid },
-	} = useForm<IFormValues>({
+	} = useForm<ILoginFormValues>({
 		mode: "onChange",
 		defaultValues: {
 			username: state?.signUpState?.username || "",
@@ -71,7 +71,7 @@ const Login = () => {
 			}
 		},
 	});
-	const onSubmitValid: SubmitHandler<IFormValues> = (data) => {
+	const onSubmitValid: SubmitHandler<ILoginFormValues> = (data) => {
 		if (loading) return;
 		const { username, password } = data;
 		login({

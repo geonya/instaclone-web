@@ -350,6 +350,14 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginResult', ok: boolean, token?: string | null, error?: string | null } | null };
 
+export type CreateCommentMutationVariables = Exact<{
+  photoId: Scalars['Int'];
+  payload: Scalars['String'];
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
+
 
 export const SeeMeDocument = gql`
     query seeMe {
@@ -556,3 +564,38 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const CreateCommentDocument = gql`
+    mutation CreateComment($photoId: Int!, $payload: String!) {
+  createComment(photoId: $photoId, payload: $payload) {
+    ok
+    error
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      photoId: // value for 'photoId'
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
