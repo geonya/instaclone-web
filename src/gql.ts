@@ -72,4 +72,11 @@ gql`
 			id
 		}
 	}
+	mutation DeleteComment($id: Int!) {
+		deleteComment(id: $id) {
+			ok
+			error
+			id
+		}
+	}
 `;

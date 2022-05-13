@@ -17,6 +17,18 @@ const CommentsCount = styled.span`
 	font-weight: 600;
 `;
 
+const PostCommentContainer = styled.div`
+	margin-top: 10px;
+	padding: 15px 0;
+	border-top: 1px solid ${(props) => props.theme.borderColor};
+`;
+const PostCommentInput = styled.input`
+	width: 100%;
+	&::placeholder {
+		font-size: 12px;
+	}
+`;
+
 export interface IComments extends Array<IComment | null> {}
 
 interface ICommentsProps {
@@ -108,19 +120,22 @@ const Comments = ({
 			{comments?.map((comment) => (
 				<Comment
 					key={comment?.id}
+					id={comment?.id}
 					author={comment?.user.username}
 					payload={comment?.payload}
+					isMine={comment?.isMine}
+					photoId={photoId}
 				/>
 			))}
-			<div>
+			<PostCommentContainer>
 				<form onSubmit={handleSubmit(onValid)}>
-					<input
+					<PostCommentInput
 						{...register("payload", { required: true })}
 						type="text"
 						placeholder="Write Comment..."
 					/>
 				</form>
-			</div>
+			</PostCommentContainer>
 		</Container>
 	);
 };

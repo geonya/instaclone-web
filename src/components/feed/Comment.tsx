@@ -2,8 +2,12 @@ import styled from "styled-components";
 import { FatText } from "../../sharedStyles";
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
+import { useDeleteCommentMutation } from "../../generated/graphql";
 
-const Container = styled.div``;
+const Container = styled.div`
+	position: relative;
+	width: 100%;
+`;
 const Payload = styled.span`
 	margin-left: 10px;
 	a {
@@ -14,6 +18,12 @@ const Payload = styled.span`
 			text-decoration: underline;
 		}
 	}
+`;
+const DeleteButton = styled.button`
+	all: unset;
+	position: absolute;
+	right: 10px;
+	cursor: pointer;
 `;
 
 export interface IComment {
@@ -28,11 +38,37 @@ export interface IComment {
 }
 
 interface ICommentProps {
+	id?: number;
 	author?: string;
 	payload?: string | null;
+	isMine?: boolean;
+	photoId?: number;
 }
 
-const Comment = ({ author, payload }: ICommentProps) => {
+const Comment = ({ id, author, payload, isMine, photoId }: ICommentProps) => {
+	const [deleteCommentMutation] = useDeleteCommentMutation({
+		variables: { id: id! },
+		update: (cache, result) => {
+			if (!result?.data?.deleteComment) return;
+			const {
+				data: {
+					deleteComment: { ok },
+				},
+			} = result;
+			if (ok) {
+				cache.evict({ id: `Comment:${id}` });
+				cache.modify({
+					id: `Photo:${photoId}`,
+					fields: {
+						commentsCount: (prev) => prev - 1,
+					},
+				});
+			}
+		},
+	});
+	const onDeleteClick = () => {
+		deleteCommentMutation();
+	};
 	return (
 		<Container>
 			<FatText>{author}</FatText>
@@ -50,6 +86,7 @@ const Comment = ({ author, payload }: ICommentProps) => {
 					</Fragment>
 				))}
 			</Payload>
+			{isMine ? <DeleteButton onClick={onDeleteClick}>❌</DeleteButton> : null}
 		</Container>
 	);
 };
