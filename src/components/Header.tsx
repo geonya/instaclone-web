@@ -59,14 +59,18 @@ const Header = () => {
 				<Column>
 					{isLoggedIn ? (
 						<IconsContainer>
-							<Icon>
-								<FontAwesomeIcon icon={faHome} size="2x" />
-							</Icon>
+							<Link to={routes.home}>
+								<Icon>
+									<FontAwesomeIcon icon={faHome} size="2x" />
+								</Icon>
+							</Link>
 							<Icon>
 								<FontAwesomeIcon icon={faCompass} size="2x" />
 							</Icon>
 							<Icon>
-								<Avatar url={data?.seeMe?.avatar} lg={false} />
+								<Link to={`/users/${data?.seeMe?.username}`}>
+									<Avatar url={data?.seeMe?.avatar} size={35} />
+								</Link>
 							</Icon>
 						</IconsContainer>
 					) : (

@@ -11,6 +11,7 @@ import {
 import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { useToggleLikeMutation } from "../../generated/graphql";
 import Comments, { IComments } from "./Comments";
+import { Link } from "react-router-dom";
 
 const PhotoContainer = styled.div`
 	max-width: 615px;
@@ -100,8 +101,12 @@ const PhotoBox = ({
 	return (
 		<PhotoContainer>
 			<PhotoHeader>
-				<Avatar url={user?.avatar} lg={true} />
-				<Username>{user?.username}</Username>
+				<Link to={`/users/${user?.username}`}>
+					<Avatar url={user?.avatar} size={40} />
+				</Link>
+				<Link to={`/users/${user?.username}`}>
+					<Username>{user?.username}</Username>
+				</Link>
 			</PhotoHeader>
 			<PhotoFile src={file} />
 			<PhotoData>

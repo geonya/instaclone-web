@@ -8,6 +8,7 @@ import routes from "./routes";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
+import Profile from "./screens/Profile";
 import SignUp from "./screens/SignUp";
 import { darkTheme, GlobalStyles, lightTheme } from "./styles";
 
@@ -36,6 +37,14 @@ function App() {
 							{!isLoggedIn ? (
 								<Route path={routes.signUp} element={<SignUp />} />
 							) : null}
+							<Route
+								path={routes.users}
+								element={
+									<Layout>
+										<Profile />
+									</Layout>
+								}
+							/>
 							<Route element={<NotFound />} />
 						</Routes>
 					</BrowserRouter>

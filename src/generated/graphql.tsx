@@ -317,33 +317,28 @@ export type User = {
 
 export type BsNameFragment = { __typename?: 'Comment', id: number, createdAt: string, isMine: boolean, payload: string, user: { __typename?: 'User', username: string, avatar?: string | null } };
 
+export type PhotoFragmentFragment = { __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean };
+
+export type Comment_FragmentFragment = { __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } };
+
+export type User_FragmentFragment = { __typename?: 'User', username: string, avatar?: string | null };
+
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SeeMeQuery = { __typename?: 'Query', seeMe?: { __typename?: 'User', id: number, username: string, avatar?: string | null } | null };
 
-export type CreateAccountMutationVariables = Exact<{
-  firstName: Scalars['String'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
-  lastName?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type CreateAccountMutation = { __typename?: 'Mutation', createAccount?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
-
-export type ToggleLikeMutationVariables = Exact<{
-  id: Scalars['Int'];
-}>;
-
-
-export type ToggleLikeMutation = { __typename?: 'Mutation', toggleLike?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
-
 export type SeeFeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', id: number, file: string, caption?: string | null, likes: number, commentsCount: number, createdAt: string, isMine: boolean, isLiked: boolean, user: { __typename?: 'User', username: string, avatar?: string | null }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
+export type SeeFeedQuery = { __typename?: 'Query', seeFeed?: Array<{ __typename?: 'Photo', caption?: string | null, createdAt: string, isMine: boolean, id: number, file: string, likes: number, commentsCount: number, isLiked: boolean, user: { __typename?: 'User', username: string, avatar?: string | null }, comments?: Array<{ __typename?: 'Comment', id: number, payload: string, isMine: boolean, createdAt: string, user: { __typename?: 'User', username: string, avatar?: string | null } } | null> | null } | null> | null };
+
+export type SeeProfileQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type SeeProfileQuery = { __typename?: 'Query', seeProfile?: { __typename?: 'User', id: number, firstName: string, lastName?: string | null, bio?: string | null, totalFollowing: number, totalFollowers: number, isFollowing: boolean, isMe: boolean, username: string, avatar?: string | null, photos?: Array<{ __typename?: 'Photo', id: number, file: string, likes: number, commentsCount: number, isLiked: boolean } | null> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -368,6 +363,24 @@ export type DeleteCommentMutationVariables = Exact<{
 
 export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null, id?: number | null } | null };
 
+export type CreateAccountMutationVariables = Exact<{
+  firstName: Scalars['String'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  lastName?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateAccountMutation = { __typename?: 'Mutation', createAccount?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
+
+export type ToggleLikeMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type ToggleLikeMutation = { __typename?: 'Mutation', toggleLike?: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } | null };
+
 export const BsNameFragmentDoc = gql`
     fragment BSName on Comment {
   id
@@ -380,15 +393,41 @@ export const BsNameFragmentDoc = gql`
   }
 }
     `;
+export const PhotoFragmentFragmentDoc = gql`
+    fragment PhotoFragment on Photo {
+  id
+  file
+  likes
+  commentsCount
+  isLiked
+}
+    `;
+export const Comment_FragmentFragmentDoc = gql`
+    fragment Comment_Fragment on Comment {
+  id
+  user {
+    username
+    avatar
+  }
+  payload
+  isMine
+  createdAt
+}
+    `;
+export const User_FragmentFragmentDoc = gql`
+    fragment User_Fragment on User {
+  username
+  avatar
+}
+    `;
 export const SeeMeDocument = gql`
     query seeMe {
   seeMe {
     id
-    username
-    avatar
+    ...User_Fragment
   }
 }
-    `;
+    ${User_FragmentFragmentDoc}`;
 
 /**
  * __useSeeMeQuery__
@@ -416,112 +455,24 @@ export function useSeeMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeM
 export type SeeMeQueryHookResult = ReturnType<typeof useSeeMeQuery>;
 export type SeeMeLazyQueryHookResult = ReturnType<typeof useSeeMeLazyQuery>;
 export type SeeMeQueryResult = Apollo.QueryResult<SeeMeQuery, SeeMeQueryVariables>;
-export const CreateAccountDocument = gql`
-    mutation createAccount($firstName: String!, $username: String!, $email: String!, $password: String!, $lastName: String) {
-  createAccount(
-    firstName: $firstName
-    username: $username
-    email: $email
-    password: $password
-    lastName: $lastName
-  ) {
-    ok
-    error
-  }
-}
-    `;
-export type CreateAccountMutationFn = Apollo.MutationFunction<CreateAccountMutation, CreateAccountMutationVariables>;
-
-/**
- * __useCreateAccountMutation__
- *
- * To run a mutation, you first call `useCreateAccountMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAccountMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAccountMutation, { data, loading, error }] = useCreateAccountMutation({
- *   variables: {
- *      firstName: // value for 'firstName'
- *      username: // value for 'username'
- *      email: // value for 'email'
- *      password: // value for 'password'
- *      lastName: // value for 'lastName'
- *   },
- * });
- */
-export function useCreateAccountMutation(baseOptions?: Apollo.MutationHookOptions<CreateAccountMutation, CreateAccountMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAccountMutation, CreateAccountMutationVariables>(CreateAccountDocument, options);
-      }
-export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
-export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
-export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
-export const ToggleLikeDocument = gql`
-    mutation ToggleLike($id: Int!) {
-  toggleLike(id: $id) {
-    ok
-    error
-  }
-}
-    `;
-export type ToggleLikeMutationFn = Apollo.MutationFunction<ToggleLikeMutation, ToggleLikeMutationVariables>;
-
-/**
- * __useToggleLikeMutation__
- *
- * To run a mutation, you first call `useToggleLikeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useToggleLikeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [toggleLikeMutation, { data, loading, error }] = useToggleLikeMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useToggleLikeMutation(baseOptions?: Apollo.MutationHookOptions<ToggleLikeMutation, ToggleLikeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ToggleLikeMutation, ToggleLikeMutationVariables>(ToggleLikeDocument, options);
-      }
-export type ToggleLikeMutationHookResult = ReturnType<typeof useToggleLikeMutation>;
-export type ToggleLikeMutationResult = Apollo.MutationResult<ToggleLikeMutation>;
-export type ToggleLikeMutationOptions = Apollo.BaseMutationOptions<ToggleLikeMutation, ToggleLikeMutationVariables>;
 export const SeeFeedDocument = gql`
     query SeeFeed {
   seeFeed {
-    id
     user {
-      username
-      avatar
+      ...User_Fragment
     }
-    file
-    caption
-    likes
-    commentsCount
     comments {
-      id
-      user {
-        username
-        avatar
-      }
-      payload
-      isMine
-      createdAt
+      ...Comment_Fragment
     }
+    caption
     createdAt
     isMine
-    isLiked
+    ...PhotoFragment
   }
 }
-    `;
+    ${User_FragmentFragmentDoc}
+${Comment_FragmentFragmentDoc}
+${PhotoFragmentFragmentDoc}`;
 
 /**
  * __useSeeFeedQuery__
@@ -549,6 +500,53 @@ export function useSeeFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Se
 export type SeeFeedQueryHookResult = ReturnType<typeof useSeeFeedQuery>;
 export type SeeFeedLazyQueryHookResult = ReturnType<typeof useSeeFeedLazyQuery>;
 export type SeeFeedQueryResult = Apollo.QueryResult<SeeFeedQuery, SeeFeedQueryVariables>;
+export const SeeProfileDocument = gql`
+    query SeeProfile($username: String!) {
+  seeProfile(username: $username) {
+    id
+    firstName
+    lastName
+    bio
+    ...User_Fragment
+    totalFollowing
+    totalFollowers
+    isFollowing
+    isMe
+    photos {
+      ...PhotoFragment
+    }
+  }
+}
+    ${User_FragmentFragmentDoc}
+${PhotoFragmentFragmentDoc}`;
+
+/**
+ * __useSeeProfileQuery__
+ *
+ * To run a query within a React component, call `useSeeProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeProfileQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useSeeProfileQuery(baseOptions: Apollo.QueryHookOptions<SeeProfileQuery, SeeProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeProfileQuery, SeeProfileQueryVariables>(SeeProfileDocument, options);
+      }
+export function useSeeProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeProfileQuery, SeeProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeProfileQuery, SeeProfileQueryVariables>(SeeProfileDocument, options);
+        }
+export type SeeProfileQueryHookResult = ReturnType<typeof useSeeProfileQuery>;
+export type SeeProfileLazyQueryHookResult = ReturnType<typeof useSeeProfileLazyQuery>;
+export type SeeProfileQueryResult = Apollo.QueryResult<SeeProfileQuery, SeeProfileQueryVariables>;
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
@@ -656,3 +654,81 @@ export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
 export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
 export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
+export const CreateAccountDocument = gql`
+    mutation createAccount($firstName: String!, $username: String!, $email: String!, $password: String!, $lastName: String) {
+  createAccount(
+    firstName: $firstName
+    username: $username
+    email: $email
+    password: $password
+    lastName: $lastName
+  ) {
+    ok
+    error
+  }
+}
+    `;
+export type CreateAccountMutationFn = Apollo.MutationFunction<CreateAccountMutation, CreateAccountMutationVariables>;
+
+/**
+ * __useCreateAccountMutation__
+ *
+ * To run a mutation, you first call `useCreateAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAccountMutation, { data, loading, error }] = useCreateAccountMutation({
+ *   variables: {
+ *      firstName: // value for 'firstName'
+ *      username: // value for 'username'
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *      lastName: // value for 'lastName'
+ *   },
+ * });
+ */
+export function useCreateAccountMutation(baseOptions?: Apollo.MutationHookOptions<CreateAccountMutation, CreateAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAccountMutation, CreateAccountMutationVariables>(CreateAccountDocument, options);
+      }
+export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
+export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
+export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
+export const ToggleLikeDocument = gql`
+    mutation ToggleLike($id: Int!) {
+  toggleLike(id: $id) {
+    ok
+    error
+  }
+}
+    `;
+export type ToggleLikeMutationFn = Apollo.MutationFunction<ToggleLikeMutation, ToggleLikeMutationVariables>;
+
+/**
+ * __useToggleLikeMutation__
+ *
+ * To run a mutation, you first call `useToggleLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleLikeMutation, { data, loading, error }] = useToggleLikeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useToggleLikeMutation(baseOptions?: Apollo.MutationHookOptions<ToggleLikeMutation, ToggleLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ToggleLikeMutation, ToggleLikeMutationVariables>(ToggleLikeDocument, options);
+      }
+export type ToggleLikeMutationHookResult = ReturnType<typeof useToggleLikeMutation>;
+export type ToggleLikeMutationResult = Apollo.MutationResult<ToggleLikeMutation>;
+export type ToggleLikeMutationOptions = Apollo.BaseMutationOptions<ToggleLikeMutation, ToggleLikeMutationVariables>;

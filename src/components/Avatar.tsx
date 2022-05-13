@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-const Container = styled.div<{ lg: boolean }>`
-	width: ${(props) => (props.lg ? "45px" : "35px")};
-	height: ${(props) => (props.lg ? "45px" : "35px")};
+const Container = styled.div<{ size: number }>`
+	width: ${(props) => `${props.size}px`};
+	height: ${(props) => `${props.size}px`};
 	border-radius: 50%;
 	background-color: #2c2c2c;
 	overflow: hidden;
@@ -14,10 +14,10 @@ const Img = styled.img`
 
 interface IAvatarProps {
 	url: string | null | undefined;
-	lg: boolean;
+	size: number;
 }
-const Avatar = ({ url, lg }: IAvatarProps) => {
-	return <Container lg={lg}>{url ? <Img src={url} /> : null}</Container>;
+const Avatar = ({ url, size }: IAvatarProps) => {
+	return <Container size={size}>{url ? <Img src={url} /> : null}</Container>;
 };
 
 export default Avatar;

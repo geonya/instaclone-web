@@ -71,7 +71,9 @@ const Comment = ({ id, author, payload, isMine, photoId }: ICommentProps) => {
 	};
 	return (
 		<Container>
-			<FatText>{author}</FatText>
+			<Link to={`/users/${author}`}>
+				<FatText>{author}</FatText>
+			</Link>
 			<Payload>
 				{payload?.split(" ").map((word, i, arr) => (
 					<Fragment key={i}>
