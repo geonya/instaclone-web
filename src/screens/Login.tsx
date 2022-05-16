@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import routes from "../routes";
 import AuthLayout from "../components/auth/AuthLayout";
-import SubmitButton from "../components/auth/SubmitButton";
+import BlueButton from "../components/shared/BlueButton";
 import Seperator from "../components/auth/Seperator";
 import AuthInput from "../components/auth/AuthInput";
 import FormBox from "../components/auth/FormBox";
@@ -130,7 +130,7 @@ const Login = () => {
 						hasError={Boolean(errors?.password?.message)}
 					/>
 					<FormError message={errors?.password?.message} />
-					<SubmitButton
+					<BlueButton
 						type="submit"
 						value={loading ? "Loading..." : "Log In"}
 						disabled={!isValid || loading}

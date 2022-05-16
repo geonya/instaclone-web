@@ -54,7 +54,9 @@ const Header = () => {
 		<Container>
 			<Wrapper>
 				<Column>
-					<FontAwesomeIcon icon={faInstagram} size="3x" />
+					<Link to={routes.home}>
+						<FontAwesomeIcon icon={faInstagram} size="3x" />
+					</Link>
 				</Column>
 				<Column>
 					{isLoggedIn ? (

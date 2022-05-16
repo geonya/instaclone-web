@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const SubmitButton = styled.input`
+const BlueButton = styled.input`
 	width: 100%;
 	border: none;
 	border-radius: 3px;
@@ -13,4 +13,4 @@ const SubmitButton = styled.input`
 	opacity: ${(props) => (props.disabled ? 0.3 : 1)};
 `;
 
-export default SubmitButton;
+export default BlueButton;

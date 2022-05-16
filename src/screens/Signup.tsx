@@ -9,7 +9,7 @@ import BottomBox from "../components/auth/ButtomBox";
 import FormBox from "../components/auth/FormBox";
 import FormError from "../components/auth/FormError";
 import Seperator from "../components/auth/Seperator";
-import SubmitButton from "../components/auth/SubmitButton";
+import BlueButton from "../components/shared/BlueButton";
 import PageTitle from "../components/PageTitle";
 import { useCreateAccountMutation } from "../generated/graphql";
 import routes from "../routes";
@@ -94,7 +94,7 @@ const SignUp = () => {
 					<Subtitle>
 						Sign up to see photos and videos from your friends.
 					</Subtitle>
-					<SubmitButton type="submit" value={`Log in with Facebook`} />
+					<BlueButton type="submit" value={`Log in with Facebook`} />
 					<Seperator />
 				</HeaderContainer>
 				<form onSubmit={handleSubmit(onSubmitValid)}>
@@ -197,7 +197,7 @@ const SignUp = () => {
 						placeholder="Password"
 					/>
 					<FormError message={errors?.password?.message} />
-					<SubmitButton
+					<BlueButton
 						type="submit"
 						value={loading ? "Loading..." : "Sign Up"}
 						disabled={!isValid || loading}

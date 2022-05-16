@@ -2,7 +2,9 @@ import { faComment, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import BlueButton from "../components/shared/BlueButton";
 import Avatar from "../components/Avatar";
+import PageTitle from "../components/PageTitle";
 import { useSeeProfileQuery } from "../generated/graphql";
 import { FatText } from "../sharedStyles";
 
@@ -71,6 +73,13 @@ const Icon = styled.span`
 	}
 `;
 
+const ProfileBtn = styled(BlueButton).attrs({
+	as: "span",
+})`
+	margin-left: 10px;
+	margin-top: 0px;
+`;
+
 interface IGetUserButtonProps {
 	isMe: boolean;
 	isFollowing: boolean;
@@ -78,23 +87,28 @@ interface IGetUserButtonProps {
 
 const Profile = () => {
 	const { username } = useParams();
-	const { data } = useSeeProfileQuery({
+	const { data, loading } = useSeeProfileQuery({
 		variables: {
 			username: username!,
 		},
 	});
 	const getUserButton = ({ isMe, isFollowing }: IGetUserButtonProps) => {
 		if (isMe) {
-			return <button>Edit Profile</button>;
+			return <ProfileBtn>Edit Profile</ProfileBtn>;
 		}
 		if (isFollowing) {
-			return <button>Unfollow</button>;
+			return <ProfileBtn>Unfollow</ProfileBtn>;
 		} else {
-			return <button>Follow</button>;
+			return <ProfileBtn>Follow</ProfileBtn>;
 		}
 	};
 	return (
 		<div>
+			<PageTitle
+				title={
+					loading ? "loading..." : `${data?.seeProfile?.username}'s profile`
+				}
+			/>
 			<Header>
 				<AvatarContainer>
 					<Avatar url={data?.seeProfile?.avatar!} size={160} />
