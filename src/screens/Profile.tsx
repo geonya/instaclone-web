@@ -5,8 +5,15 @@ import styled from "styled-components";
 import BlueButton from "../components/shared/BlueButton";
 import Avatar from "../components/Avatar";
 import PageTitle from "../components/PageTitle";
-import { useSeeProfileQuery } from "../generated/graphql";
+import {
+	SeeMeDocument,
+	SeeProfileDocument,
+	useFollowUserMutation,
+	useSeeProfileQuery,
+	useUnfollowUserMutation,
+} from "../generated/graphql";
 import { FatText } from "../sharedStyles";
+import useUser from "../components/hooks/useUser";
 
 const Header = styled.div`
 	display: flex;
@@ -78,6 +85,7 @@ const ProfileBtn = styled(BlueButton).attrs({
 })`
 	margin-left: 10px;
 	margin-top: 0px;
+	cursor: pointer;
 `;
 
 interface IGetUserButtonProps {
@@ -87,19 +95,42 @@ interface IGetUserButtonProps {
 
 const Profile = () => {
 	const { username } = useParams();
+	const { data: userData } = useUser();
 	const { data, loading } = useSeeProfileQuery({
 		variables: {
 			username: username!,
 		},
+	});
+	const [unFollowUser] = useUnfollowUserMutation({
+		variables: {
+			username: username!,
+		},
+		refetchQueries: [
+			{ query: SeeProfileDocument, variables: { username } },
+			{
+				query: SeeMeDocument,
+			},
+		],
+	});
+	const [followUser] = useFollowUserMutation({
+		variables: {
+			username: username!,
+		},
+		refetchQueries: [
+			{ query: SeeProfileDocument, variables: { username } },
+			{
+				query: SeeMeDocument,
+			},
+		],
 	});
 	const getUserButton = ({ isMe, isFollowing }: IGetUserButtonProps) => {
 		if (isMe) {
 			return <ProfileBtn>Edit Profile</ProfileBtn>;
 		}
 		if (isFollowing) {
-			return <ProfileBtn>Unfollow</ProfileBtn>;
+			return <ProfileBtn onClick={() => unFollowUser()}>Unfollow</ProfileBtn>;
 		} else {
-			return <ProfileBtn>Follow</ProfileBtn>;
+			return <ProfileBtn onClick={() => followUser()}>Follow</ProfileBtn>;
 		}
 	};
 	return (
