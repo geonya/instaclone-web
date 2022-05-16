@@ -27,8 +27,6 @@ const USER_FRAGMENT = gql`
 	fragment User_Fragment on User {
 		username
 		avatar
-		totalFollowers
-		totalFollowing
 	}
 `;
 

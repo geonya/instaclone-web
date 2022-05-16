@@ -6,14 +6,12 @@ import BlueButton from "../components/shared/BlueButton";
 import Avatar from "../components/Avatar";
 import PageTitle from "../components/PageTitle";
 import {
-	SeeMeDocument,
-	SeeProfileDocument,
 	useFollowUserMutation,
 	useSeeProfileQuery,
 	useUnfollowUserMutation,
 } from "../generated/graphql";
 import { FatText } from "../sharedStyles";
-import useUser from "../components/hooks/useUser";
+import { useApolloClient } from "@apollo/client";
 
 const Header = styled.div`
 	display: flex;
@@ -95,33 +93,52 @@ interface IGetUserButtonProps {
 
 const Profile = () => {
 	const { username } = useParams();
-	const { data: userData } = useUser();
 	const { data, loading } = useSeeProfileQuery({
 		variables: {
 			username: username!,
 		},
 	});
+	const apolloClient = useApolloClient();
 	const [unFollowUser] = useUnfollowUserMutation({
 		variables: {
 			username: username!,
 		},
-		refetchQueries: [
-			{ query: SeeProfileDocument, variables: { username } },
-			{
-				query: SeeMeDocument,
-			},
-		],
+		update: (cache, result) => {
+			if (!result?.data?.unfollowUser) return;
+			const {
+				data: {
+					unfollowUser: { ok },
+				},
+			} = result;
+			if (!ok) return;
+			cache.modify({
+				id: `User:${username}`,
+				fields: {
+					isFollowing: () => false,
+					totalFollowers: (prev) => prev - 1,
+				},
+			});
+		},
 	});
 	const [followUser] = useFollowUserMutation({
 		variables: {
 			username: username!,
 		},
-		refetchQueries: [
-			{ query: SeeProfileDocument, variables: { username } },
-			{
-				query: SeeMeDocument,
-			},
-		],
+		onCompleted: (data) => {
+			if (!data?.followUser?.ok) return;
+			const {
+				followUser: { ok },
+			} = data;
+			if (!ok) return;
+			const { cache } = apolloClient;
+			cache.modify({
+				id: `User:${username}`,
+				fields: {
+					isFollowing: () => true,
+					totalFollowers: (prev) => prev + 1,
+				},
+			});
+		},
 	});
 	const getUserButton = ({ isMe, isFollowing }: IGetUserButtonProps) => {
 		if (isMe) {
