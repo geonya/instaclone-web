@@ -12,6 +12,7 @@ import {
 } from "../generated/graphql";
 import { FatText } from "../sharedStyles";
 import { useApolloClient } from "@apollo/client";
+import useUser from "../components/hooks/useUser";
 
 const Header = styled.div`
 	display: flex;
@@ -92,6 +93,7 @@ interface IGetUserButtonProps {
 }
 
 const Profile = () => {
+	const { data: userData } = useUser();
 	const { username } = useParams();
 	const { data, loading } = useSeeProfileQuery({
 		variables: {
@@ -118,6 +120,16 @@ const Profile = () => {
 					totalFollowers: (prev) => prev - 1,
 				},
 			});
+			if (!userData?.seeMe) return;
+			const {
+				seeMe: { username: loggedInUsername },
+			} = userData;
+			cache.modify({
+				id: `User:${loggedInUsername}`,
+				fields: {
+					totalFollowing: (prev) => prev - 1,
+				},
+			});
 		},
 	});
 	const [followUser] = useFollowUserMutation({
@@ -136,6 +148,16 @@ const Profile = () => {
 				fields: {
 					isFollowing: () => true,
 					totalFollowers: (prev) => prev + 1,
+				},
+			});
+			if (!userData?.seeMe) return;
+			const {
+				seeMe: { username: loggedInUsername },
+			} = userData;
+			cache.modify({
+				id: `User:${loggedInUsername}`,
+				fields: {
+					totalFollowing: (prev) => prev + 1,
 				},
 			});
 		},
