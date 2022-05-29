@@ -200,7 +200,7 @@ const SignUp = () => {
 					<FormError message={errors?.password?.message} />
 					<BlueButton
 						type="submit"
-						value={loading ? "Loading..." : "Sign Up"}
+						value={loading ? "Loading.." : "Sign Up"}
 						disabled={!isValid || loading}
 					/>
 				</form>
