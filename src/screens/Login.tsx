@@ -73,9 +73,8 @@ const Login = () => {
 	});
 	const onSubmitValid: SubmitHandler<ILoginFormValues> = (data) => {
 		if (loading) return;
-		const { username, password } = data;
 		login({
-			variables: { username, password },
+			variables: { ...data },
 		});
 	};
 

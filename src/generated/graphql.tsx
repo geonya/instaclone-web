@@ -561,7 +561,7 @@ export type SeeProfileQueryHookResult = ReturnType<typeof useSeeProfileQuery>;
 export type SeeProfileLazyQueryHookResult = ReturnType<typeof useSeeProfileLazyQuery>;
 export type SeeProfileQueryResult = Apollo.QueryResult<SeeProfileQuery, SeeProfileQueryVariables>;
 export const LoginDocument = gql`
-    mutation login($username: String!, $password: String!) {
+    mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
     ok
     token

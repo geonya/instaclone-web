@@ -123,6 +123,7 @@ const SignUp = () => {
 					<FormError message={errors?.firstName?.message} />
 					<AuthInput
 						{...register("lastName", {
+							required: "Last Name is required!",
 							minLength: {
 								value: 2,
 								message: "2~10자 이내에 영문만 사용 가능합니다. ",

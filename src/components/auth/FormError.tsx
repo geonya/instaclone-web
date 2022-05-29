@@ -8,10 +8,10 @@ const Span = styled.span`
 `;
 
 interface IFormErrorProps {
-	message: string | undefined;
+	message?: string;
 }
 
 const FormError = ({ message }: IFormErrorProps) =>
-	!message ? null : <Span>{message} </Span>;
+	!message ? null : <Span>{message}</Span>;
 
 export default FormError;
