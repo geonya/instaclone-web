@@ -1,19 +1,19 @@
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import AuthInput from "../components/auth/AuthInput";
-import AuthLayout from "../components/auth/AuthLayout";
-import BottomBox from "../components/auth/ButtomBox";
-import FormBox from "../components/auth/FormBox";
-import FormError from "../components/auth/FormError";
-import Seperator from "../components/auth/Seperator";
-import BlueButton from "../components/shared/BlueButton";
-import PageTitle from "../components/PageTitle";
-import { useCreateAccountMutation } from "../generated/graphql";
-import routes from "../routes";
-import { FatLink } from "../sharedStyles";
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import AuthInput from '../components/auth/AuthInput';
+import AuthLayout from '../components/auth/AuthLayout';
+import BottomBox from '../components/auth/ButtomBox';
+import FormBox from '../components/auth/FormBox';
+import FormError from '../components/auth/FormError';
+import Seperator from '../components/auth/Seperator';
+import BlueButton from '../components/shared/BlueButton';
+import PageTitle from '../components/PageTitle';
+import { useCreateAccountMutation } from '../generated/graphql';
+import routes from '../routes';
+import { FatLink } from '../sharedStyles';
 
 const HeaderContainer = styled.div`
 	display: flex;
@@ -53,7 +53,7 @@ const SignUp = () => {
 		setError,
 		clearErrors,
 	} = useForm<IFormValues>({
-		mode: "onChange",
+		mode: 'onChange',
 	});
 	const navigate = useNavigate();
 	const [createAccount, { loading }] = useCreateAccountMutation({
@@ -63,7 +63,7 @@ const SignUp = () => {
 				createAccount: { ok, error },
 			} = data;
 			if (!ok) {
-				setError("result", {
+				setError('result', {
 					message: error!,
 				});
 			}
@@ -71,10 +71,10 @@ const SignUp = () => {
 			const signUpState: ISignUpState = {
 				username,
 				password,
-				message: "Account Created! Please Log in",
+				message: 'Account Created! Please Log in',
 			};
 			navigate(routes.home, {
-				state: { signUpState },
+				state: signUpState,
 			});
 		},
 	});
@@ -87,125 +87,125 @@ const SignUp = () => {
 	};
 	return (
 		<AuthLayout>
-			<PageTitle title="Sign Up" />
+			<PageTitle title='Sign Up' />
 			<FormBox>
 				<HeaderContainer>
-					<FontAwesomeIcon icon={faInstagram} size="4x" />
+					<FontAwesomeIcon icon={faInstagram} size='4x' />
 					<Subtitle>
 						Sign up to see photos and videos from your friends.
 					</Subtitle>
-					<BlueButton type="submit" value={`Log in with Facebook`} />
+					<BlueButton type='submit' value={`Log in with Facebook`} />
 					<Seperator />
 				</HeaderContainer>
 				<form onSubmit={handleSubmit(onSubmitValid)}>
 					<AuthInput
-						{...register("firstName", {
-							required: "First Name is required!",
+						{...register('firstName', {
+							required: 'First Name is required!',
 							minLength: {
 								value: 2,
-								message: "2~10자 이내에 영문만 사용 가능합니다. ",
+								message: '2~10자 이내에 영문만 사용 가능합니다. ',
 							},
 							maxLength: {
 								value: 10,
-								message: "2~10자 이내에 영문만 사용 가능합니다. ",
+								message: '2~10자 이내에 영문만 사용 가능합니다. ',
 							},
 							pattern: {
 								value: /^[a-zA-Z]{2,10}$/g,
-								message: "2~10자 이내에 영문만 사용 가능합니다.",
+								message: '2~10자 이내에 영문만 사용 가능합니다.',
 							},
 							onChange: () => {
-								clearErrors("result");
+								clearErrors('result');
 							},
 						})}
-						type="text"
-						placeholder="First Name"
+						type='text'
+						placeholder='First Name'
 					/>
 					<FormError message={errors?.firstName?.message} />
 					<AuthInput
-						{...register("lastName", {
-							required: "Last Name is required!",
+						{...register('lastName', {
+							required: 'Last Name is required!',
 							minLength: {
 								value: 2,
-								message: "2~10자 이내에 영문만 사용 가능합니다. ",
+								message: '2~10자 이내에 영문만 사용 가능합니다. ',
 							},
 							maxLength: {
 								value: 10,
-								message: "2~10자 이내에 영문만 사용 가능합니다. ",
+								message: '2~10자 이내에 영문만 사용 가능합니다. ',
 							},
 							pattern: {
 								value: /^[a-zA-Z]{2,10}$/g,
-								message: "2~10자 이내에 영문만 사용 가능합니다.",
+								message: '2~10자 이내에 영문만 사용 가능합니다.',
 							},
 							onChange: () => {
-								clearErrors("result");
+								clearErrors('result');
 							},
 						})}
-						type="text"
-						placeholder="Last Name"
+						type='text'
+						placeholder='Last Name'
 					/>
 					<FormError message={errors?.lastName?.message} />
 					<AuthInput
-						{...register("email", {
-							required: "E-mail is required!",
+						{...register('email', {
+							required: 'E-mail is required!',
 							pattern: {
 								value:
 									/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-								message: "이메일이 형식에 맞지 않습니다.",
+								message: '이메일이 형식에 맞지 않습니다.',
 							},
 							onChange: () => {
-								clearErrors("result");
+								clearErrors('result');
 							},
 						})}
-						type="text"
-						placeholder="Email"
+						type='text'
+						placeholder='Email'
 					/>
 					<FormError message={errors?.email?.message} />
 					<AuthInput
-						{...register("username", {
-							required: "User Name is required!",
+						{...register('username', {
+							required: 'User Name is required!',
 							minLength: {
 								value: 2,
-								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다. ",
+								message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다. ',
 							},
 							maxLength: {
 								value: 10,
-								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다. ",
+								message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다. ',
 							},
 							pattern: {
 								value: /^[a-z0-9]{2,10}$/g,
-								message: "2~10자 이내에 영문이나 숫자만 사용 가능합니다.",
+								message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
 							},
 							onChange: () => {
-								clearErrors("result");
+								clearErrors('result');
 							},
 						})}
-						type="text"
-						placeholder="Username"
+						type='text'
+						placeholder='Username'
 					/>
 					<FormError message={errors?.username?.message} />
 					<AuthInput
-						{...register("password", {
-							required: "Password is required!",
+						{...register('password', {
+							required: 'Password is required!',
 							minLength: {
 								value: 4,
-								message: "비밀번호는 최소 4자 이상이여야 합니다.",
+								message: '비밀번호는 최소 4자 이상이여야 합니다.',
 							},
 							onChange: () => {
-								clearErrors("result");
+								clearErrors('result');
 							},
 						})}
-						type="password"
-						placeholder="Password"
+						type='password'
+						placeholder='Password'
 					/>
 					<FormError message={errors?.password?.message} />
 					<BlueButton
-						type="submit"
-						value={loading ? "Loading.." : "Sign Up"}
+						type='submit'
+						value={loading ? 'Loading..' : 'Sign Up'}
 						disabled={!isValid || loading}
 					/>
 				</form>
 			</FormBox>
-			<BottomBox cta="Have an account?" link={routes.home} linkText="Log in" />
+			<BottomBox cta='Have an account?' link={routes.home} linkText='Log in' />
 		</AuthLayout>
 	);
 };
